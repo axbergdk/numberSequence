@@ -58,3 +58,38 @@ h1 {
     transition: .8s ease-in-out;
     transform: rotate(720deg);
 }
+
+.correct {
+    background-color: yellowgreen;
+}
+
+.number.missing.disapear {
+    transition: .8s ease-in;
+    background-color: black;
+}
+
+.winner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 5vh;
+}
+
+.winner h2 {
+    color: white;
+    font-size: 5rem;
+}
+
+.winner a {
+    font-size: 2rem;
+    background-color: white;
+    color: black;
+    padding: 1.5em;
+    border-radius: .8em;
+    text-decoration: none;
+}
+
+.hide {
+    display: none;
+}
