@@ -1,0 +1,60 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 60%;
+}
+
+body {
+    background-color: black;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    font-size: 6rem;
+}
+
+.sequence-area {
+    display: flex;
+    justify-content: space-around;
+}
+
+.number-area {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 55em;
+}
+
+.number {
+    width: 12%;
+    text-align: center;
+    background-color: white;
+    border-radius: .5em;
+    font-size: 6rem;
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.missing {
+    transform: rotate(35deg);
+}
+
+.missing:nth-child(odd) {
+    transform: rotate(-35deg);
+}
+
+.active {
+    border: 3px solid red;
+}
+
+.wrong {
+    background-color: red;
+    transition: .8s ease-in-out;
+    transform: rotate(720deg);
+}
