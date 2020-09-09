@@ -18,13 +18,16 @@ function startGame() {
     var end = start + sequenceLength;
 
     var missing = [];
+    var rand = randomIntFromInterval(2, 3);
 
     while (start <= end) {
         let element = start;
         var number = document.createElement("div");
-        if (element % 2 === 0) {
+        if (element % rand === 0) {
             missing.push(element);
             number.dataset.answer = element;
+            number.ondragover = allowDrop;
+            number.ondrop = drop;
             element = '';
             number.onclick = setActiveDestination;
         }
@@ -47,6 +50,8 @@ function startGame() {
         number.classList.add("number");
         number.classList.add("missing");
         number.innerText = element;
+        number.draggable = true;
+        number.ondragstart = drag;
 
         numberSection.appendChild(number);
 
@@ -88,6 +93,7 @@ function setActiveSource(e) {
             setTimeout(() => {
                 activeDestination.classList.toggle("correct");
                 activeSource.classList.toggle("disapear");
+                activeDestination.onclick = undefined;
                 resetFields();
                 checkForWin();
             }, 200);
@@ -117,4 +123,19 @@ function checkForWin() {
         document.getElementById("you-won").classList.toggle("hide");
 
     }
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.innerText);
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.innerText = data;
 }
