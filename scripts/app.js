@@ -3,7 +3,7 @@ var min = 0,
     sequenceLength = 5;
 var numberSection = document.getElementById("number-area");
 var sequenceSection = document.getElementById("sequence-area");
-let activeDestination, activeSource;
+
 let missingNumbers;
 
 function startGame() {
@@ -26,10 +26,10 @@ function startGame() {
         if (element % rand === 0) {
             missing.push(element);
             number.dataset.answer = element;
-            number.ondragover = allowDrop;
             number.ondrop = drop;
+            number.ondragover = handleDragOver;
+            number.ondragleave = handleDragLeave;
             element = '';
-            number.onclick = setActiveDestination;
         }
         number.classList.add("number");
         number.innerText = element;
@@ -46,12 +46,13 @@ function startGame() {
         var number = document.createElement("div");
         missingNumbers.push(element);
 
-        number.onclick = setActiveSource;
+
         number.classList.add("number");
         number.classList.add("missing");
         number.innerText = element;
         number.draggable = true;
         number.ondragstart = drag;
+        number.id = "missing" + element;
 
         numberSection.appendChild(number);
 
@@ -69,55 +70,6 @@ function randomIntFromInterval(min, max) { // min and max included
     return no;
 }
 
-function setActiveDestination(e) {
-    if (activeDestination) {
-        activeDestination.classList.toggle("active");
-    }
-
-    activeDestination = e.target;
-
-    activeDestination.classList.toggle("active");
-}
-
-function setActiveSource(e) {
-    if (activeDestination) {
-        if (activeSource) {
-            activeSource.classList.toggle("active");
-        }
-        activeSource = e.target;
-        activeSource.classList.toggle("active");
-        if (activeDestination && activeDestination.dataset.answer == activeSource.innerText) {
-            activeDestination.innerText = activeSource.innerText;
-            missingNumbers.splice(missingNumbers.indexOf(activeSource.innerText));
-            activeSource.innerText = '';
-            setTimeout(() => {
-                activeDestination.classList.toggle("correct");
-                activeSource.classList.toggle("disapear");
-                activeDestination.onclick = undefined;
-                resetFields();
-                checkForWin();
-            }, 200);
-
-        } else {
-            activeDestination.innerText = activeSource.innerText;
-            activeDestination.classList.toggle("wrong");
-            setTimeout(() => {
-                activeDestination.classList.toggle("wrong");
-                activeDestination.innerText = '';
-                resetFields();
-            }, 1000);
-        }
-
-    }
-}
-
-function resetFields() {
-    activeDestination.classList.toggle("active");
-    activeSource.classList.toggle("active");
-    activeDestination = null;
-    activeSource = null;
-}
-
 function checkForWin() {
     if (missingNumbers.length === 0) {
         document.getElementById("you-won").classList.toggle("hide");
@@ -127,15 +79,42 @@ function checkForWin() {
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.innerText);
+    ev.dataTransfer.setData("id", ev.target.id);
+    ev.dataTransfer.setData(ev.target.innerText, "dummy")
 }
 
-function allowDrop(ev) {
-    ev.preventDefault();
 
-}
 
 function drop(ev) {
+
+    console.log("drop")
+    var data = ev.dataTransfer;
+    if (data.types.indexOf(this.dataset.answer) === -1) {
+        return false;
+    } else {
+        this.ondragover = undefined;
+        this.ondrop = undefined;
+        var number = data.getData("text");
+        ev.target.innerText = number;
+        document.getElementById(data.getData("id")).classList.toggle("disapear");
+        missingNumbers.splice(missingNumbers.indexOf(parseInt(number)), 1);
+        checkForWin();
+    }
+
+}
+
+function handleDragOver(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.innerText = data;
+    var data = ev.dataTransfer;
+    var answer = this.dataset.answer;
+    if (data.types.indexOf(answer) === -1) {
+        this.classList.add('wrong');
+    } else {
+        this.classList.add("correct");
+    }
+}
+
+function handleDragLeave(e) {
+    this.classList.remove('wrong');
+    this.classList.remove('correct');
 }
