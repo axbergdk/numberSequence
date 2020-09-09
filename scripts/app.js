@@ -6,7 +6,7 @@ var sequenceSection = document.getElementById("sequence-area");
 
 let missingNumbers;
 
-function startGame() {
+function startSequenceGame() {
     missingNumbers = [];
     document.getElementById("you-won").classList.toggle("hide");
     numberSection.innerHTML = '';
@@ -27,8 +27,10 @@ function startGame() {
             missing.push(element);
             number.dataset.answer = element;
             number.ondrop = drop;
+
             number.ondragover = handleDragOver;
             number.ondragleave = handleDragLeave;
+
             element = '';
         }
         number.classList.add("number");
@@ -63,7 +65,7 @@ function startGame() {
 
 
 
-startGame();
+startSequenceGame();
 
 function randomIntFromInterval(min, max) { // min and max included 
     var no = Math.floor(Math.random() * (max - min + 1) + min);
