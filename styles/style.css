@@ -10,6 +10,7 @@
 
 body {
     background-color: black;
+    position: fixed;
 }
 
 h1 {
