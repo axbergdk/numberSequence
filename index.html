@@ -17,9 +17,22 @@
         </section>
         <section id="number-area" class="number-area"></section>
 
-        <section id="you-won" class="winner">
+        <section id="you-won" class="winner hide">
             <h2>DU VANDT!</h2>
-            <a href="#" onclick="startSequenceGame()">Prøv igen!</a>
+            <a href="#" onclick="start()">Prøv igen!</a>
+        </section>
+        <section id="chooseGame" class="winner">
+            <h2>Vælg spil type</h2>
+            <div class="container">
+                <input type="radio" name="difficulty" id="simple" value="simple">
+                <label for="simple">Nem</label>
+            </div>
+            <div class="container">
+
+                <input type="radio" name="difficulty" id="advanced" value="advanced">
+                <label for="advanced">Svær</label>
+            </div>
+            <a href="#" class="startBtn" onclick="start()">Go!</a>
         </section>
     </main>
     <script src="./scripts/DragDropTouch.js"></script>

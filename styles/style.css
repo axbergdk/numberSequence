@@ -107,6 +107,16 @@ main {
     display: none;
 }
 
+.container {
+    width: 4em;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.winner .startBtn {
+    padding: .5em;
+}
+
 @media screen and (max-width: 768px) {
     * {
         font-size: 60%;

@@ -1,3 +1,4 @@
+var gameMode = "";
 var min = 0,
     max = 100,
     sequenceLength = 5;
@@ -6,66 +7,102 @@ var sequenceSection = document.getElementById("sequence-area");
 
 let missingNumbers;
 
-function startSequenceGame() {
-    missingNumbers = [];
-    document.getElementById("you-won").classList.toggle("hide");
-    numberSection.innerHTML = '';
-    sequenceSection.innerHTML = '';
-    activeDestination = null;
-    activeSource = null;
+function startSequenceGame(sequence) {
 
-    var start = randomIntFromInterval(min, max);
-    var end = start + sequenceLength;
+    resetGameObjects();
 
     var missing = [];
     var rand = randomIntFromInterval(2, 3);
 
-    while (start <= end) {
-        let element = start;
-        var number = document.createElement("div");
+    for (var i = 0; i < sequence.length; i++) {
+        let element = sequence[i];
+
         if (element % rand === 0) {
             missing.push(element);
-            number.dataset.answer = element;
-            number.ondrop = drop;
-
-            number.ondragover = handleDragOver;
-            number.ondragleave = handleDragLeave;
-
-            element = '';
         }
-        number.classList.add("number");
-        number.innerText = element;
 
+        var number = createNumberElement(element, false, element % rand === 0);
         sequenceSection.appendChild(number);
-        start++;
     }
-
-
 
     while (missing.length > 0) {
         let element = missing[randomIntFromInterval(0, missing.length - 1)];
         missing.splice(missing.indexOf(element), 1);
-        var number = document.createElement("div");
+        var number = createNumberElement(element, true, false);
         missingNumbers.push(element);
-
-
-        number.classList.add("number");
-        number.classList.add("missing");
-        number.innerText = element;
-        number.draggable = true;
-        number.ondragstart = drag;
-        number.id = "missing" + element;
-
         numberSection.appendChild(number);
-
     }
+}
 
+function startGame() {
+    if (gameMode === 'advanced') {
+        startAdvancedSequence();
+    }
+    if (gameMode === 'simple') {
+        startSimpleSequence();
+    }
+}
+
+function startSimpleSequence() {
+    var start = randomIntFromInterval(min, max);
+    var end = start + sequenceLength;
+    var sequence = [];
+    while (start < end) {
+        sequence.push(start);
+        start++;
+    }
+    startSequenceGame(sequence);
+}
+
+function startAdvancedSequence() {
+    var sequence = [];
+
+    for (var i = 0; i < sequenceLength; i++) {
+        sequence.push(randomIntFromInterval(min, max));
+    }
+    startSequenceGame(sequence.sort((a, b) => { return a - b }));
 
 }
 
+function createNumberElement(number, isMissingNumber, isPlaceholder) {
+    var element = document.createElement("div");
+    if (isPlaceholder) {
+        element.dataset.answer = number;
+        element.ondrop = drop;
 
+        element.ondragover = handleDragOver;
+        element.ondragleave = handleDragLeave;
+        number = '';
+    }
+    if (isMissingNumber) {
+        element.classList.add("missing");
+        element.draggable = true;
+        element.ondragstart = drag;
+        element.id = "missing" + element;
+    }
 
-startSequenceGame();
+    element.classList.add("number");
+    element.innerText = number;
+    return element;
+}
+
+function resetGameObjects() {
+    missingNumbers = [];
+    document.getElementById("you-won").classList.add("hide");
+    numberSection.innerHTML = '';
+    sequenceSection.innerHTML = '';
+    activeDestination = null;
+    activeSource = null;
+}
+
+function start() {
+    if (document.getElementById("advanced").checked || document.getElementById("simple").checked) {
+        gameMode = document.getElementById("advanced").checked ? 'advanced' : 'simple';
+        document.getElementById("chooseGame").classList.add("hide");
+        startGame();
+
+    }
+}
 
 function randomIntFromInterval(min, max) { // min and max included 
     var no = Math.floor(Math.random() * (max - min + 1) + min);
