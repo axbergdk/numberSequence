@@ -78,7 +78,7 @@ function createNumberElement(number, isMissingNumber, isPlaceholder) {
         element.classList.add("missing");
         element.draggable = true;
         element.ondragstart = drag;
-        element.id = "missing" + element;
+        element.id = "missing" + number;
     }
 
     element.classList.add("number");
