@@ -4,7 +4,7 @@ var elements = 6;
 function createTile(number) {
     var card = document.getElementById("js-clone").cloneNode(true);
     card.id = "";
-    card.querySelector("img").src = "images/asset" + number + ".svg";
+    card.querySelector("img").src = "images/Asset" + number + ".svg";
     var inner = card.querySelector(".flip-card-inner");
     inner.dataset.number = number;
     inner.onclick = function(el) {
